@@ -1,6 +1,15 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "The app accesses your photos to let you attach them with your todos."
+        }
+      ]
+    ],
     "name": "orbital-app",
+    "scheme": "orbital-app",
     "slug": "orbital-app",
     "version": "1.0.0",
     "orientation": "portrait",
