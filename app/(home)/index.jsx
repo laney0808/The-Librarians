@@ -1,7 +1,8 @@
-import { /*Alert,*/ FlatList, Pressable, View, Linking } from 'react-native';
+import { /*Alert,*/ FlatList, Pressable, View, Linking, Button } from 'react-native';
 import { supabase } from '../../lib/supabase';
 import { useEffect, useState } from 'react';
-import { /*Checkbox,*/ Text } from 'react-native-paper';
+import { /*Checkbox,*/ Text} from 'react-native-paper';
+import test from '../src/Test';
 // import { useRouter } from 'expo-router';
 // import { Image } from 'react-native-paper/lib/typescript/src/components/Avatar/Avatar';
 
@@ -27,6 +28,11 @@ export default function HomeScreen() {
         }
     }, [refreshing]);
 
+    //TEST BUTTON
+    const handleButtonPress = () => {
+        test();
+    }
+
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <FlatList
@@ -35,6 +41,7 @@ export default function HomeScreen() {
                 onRefresh={() => setRefreshing(true)}
                 refreshing={refreshing}
             />
+            <Button title="Test Run" onPress={handleButtonPress} />
         </View>
     );
 }

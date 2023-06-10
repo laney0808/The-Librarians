@@ -3,7 +3,7 @@ import { View, /*Image*/ } from "react-native";
 import { Text, TextInput, Button, ActivityIndicator } from "react-native-paper";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../contexts/auth";
-import { useRouter } from "expo-router";
+import { useRouter} from "expo-router";
 //import * as ImagePicker from 'expo-image-picker';
 
 
@@ -47,5 +47,9 @@ export default function NewContent() {
         {errMsg !== '' && <Text>{errMsg}</Text>}
         <Button onPress={handleSubmit}>Submit</Button>
         {loading && <ActivityIndicator />}
+        <Button onPress={() => router.push('/src/NewProperty')}>
+          Create New Property
+        </Button>
+       
     </View>;
 }

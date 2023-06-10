@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Text, TextInput, Button, ActivityIndicator } from "react-native-paper";
 import { Link } from "expo-router";
 import { supabase } from "../../lib/supabase";
+import test from "../src/Test";
 
 export default function LoginPage(){
     const [email, setEmail] = useState('');
@@ -30,6 +31,11 @@ export default function LoginPage(){
         }
     }
 
+    //TEST BUTTON
+    const handleButtonPress = () => {
+        test();
+    }
+
     return(
      <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text>Email</Text>
@@ -51,6 +57,7 @@ export default function LoginPage(){
         <Link href="/register"> 
             <Button>Go to register</Button>
         </Link>
+        <Button title="Test Run" onPress={handleButtonPress} />
      </View>
     )
 }
