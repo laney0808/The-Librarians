@@ -17,11 +17,13 @@ export default class Manager {
   static addTag(tagName, property) {
     const tag = Tag.of(tagName, property);
     property.addTag(tagName, tag);
+    return tag;
   }
 
-  static addProperty(tag, propName){
-    const property = new Property.of(propName);
+  static addProperty(propName, tag){
+    const property = new Property.of(propName, tag);
     tag.addProperty(propName, property);
+    return property;
   }
 
   static fetchTagList(property){
@@ -31,6 +33,6 @@ export default class Manager {
 
   static fetchChildren(tag){
     const children = tag.state.children;
-    return Array.from(children.values);
+    return Array.from(children.values());
   }
 }

@@ -13,16 +13,18 @@ class Property extends Component {
     };
   }
 
-  static of(title) {
+  static of(title, parent) {
     const property = new Property();
-    property.title = title;
+    property.title = title.toLowerCase();
+    property.parent = parent;
     return property;
   }//is there any situation where i would need this?
 
   addTag(tagName, tag){
     const tags = this.state.tags;
-    tags.set(tagName, tag);
-    this.setState({tags: tags});
+    tags.set(tagName.toLowerCase(), tag);
+    this.state = {tags: tags};
+    this.forceUpdate();
   }
 
   toString(){

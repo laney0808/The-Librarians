@@ -1,12 +1,12 @@
-import Property from "./Property";
-import Tag from "./Tag";
 import { Component } from 'react';
 import { Text, View } from 'react-native';
 
 class Content extends Component {
     id = '';
-    title = '';
     user_id = '';
+    title = '';
+    link = '';
+    state = {};
   constructor(props) {
     super(props);
     this.state = {
@@ -15,22 +15,31 @@ class Content extends Component {
     };
   }
 
-  addTag(tag) {
-    const { tags } = this.state;
-    tags.set(tag.title, tag);
-    this.setState({ tags });
+  static of(title, link) {
+    const content = new Content();
+    content.title = title.toLowerCase();
+    content.link = link;
+    return content;
   }
 
-  showProps() {
-    const { tags } = this.state;
+  rename(title){
+    this.title = title.toLowerCase();
+  }
 
-    // Filter and display properties
-    const properties = Array.from(tags.values()).filter(property => (!property.parent)||this.state.tags.has(property.parent.title));
-    console.log(properties);
+  //ERROR: does not work using setState()
+  editTag(tags) {//in map
+    //for this map, key is the fullName of the tag
+    this.state = {tags};
+    this.forceUpdate();
+  }
+
+  hasTag(key) {//fullName
+    const tags = this.state.tags;
+    return tags.has(key);
   }
 
   toString(){
-    return this.content 
+    return this.title;
   }
 
   render() {

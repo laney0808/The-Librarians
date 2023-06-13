@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import Property from './Property';
 
 class Tag extends Component {
   id;
@@ -17,25 +16,36 @@ class Tag extends Component {
 
   static of(title, property) {
     const tag = new Tag();
-    tag.title = title;
+    tag.title = title.toLowerCase();
     tag.property = property;
     tag.parent = property.parent;
+    tag.forceUpdate();
     return tag;
   }
 
   rename(title){
-    this.title = title;
+    this.title = title.toLowerCase();
     this.forceUpdate();
   }
 
   addProperty(propName, property){
     const children = this.state.children;
-    children.set(propName, property);
+    children.set(propName.toLowerCase(), property);
     this.state = {children: children};
+    this.forceUpdate();
   }
 
   toString() {
     return this.title;
+  }
+
+  fullName(){
+    if (this.parent != null) {
+      const prefix = this.parent.fullName();
+      return prefix + '/' + this.title;
+    } else {
+      return this.title;
+    }
   }
 
   render() {
