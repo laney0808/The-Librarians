@@ -57,7 +57,7 @@ export default function LoginPage(){
         <Link href="/register"> 
             <Button>Go to register</Button>
         </Link>
-        <Button title="Test Run" onPress={handleButtonPress} />
+        <Button title="Test Run" onPress={handleButtonPress}/>
      </View>
     )
 }

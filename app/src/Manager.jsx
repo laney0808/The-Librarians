@@ -14,18 +14,23 @@ import Property from "./Property";
 import Tag from './Tag';
 
 export default class Manager {
-  addTag(property, tagName) {
-    const tag = new Tag();
-    tag.rename(tagName, property);
-    const tags = property.state.tags;
-    tags.set(tagName, tag);
-    property.setState({ tags });
+  static addTag(tagName, property) {
+    const tag = Tag.of(tagName, property);
+    property.addTag(tagName, tag);
   }
 
-  addProperty(tag, propName){
+  static addProperty(tag, propName){
     const property = new Property.of(propName);
+    tag.addProperty(propName, property);
+  }
+
+  static fetchTagList(property){
+      const tags = property.state.tags;
+      return Array.from(tags.values())
+  }
+
+  static fetchChildren(tag){
     const children = tag.state.children;
-    children.set(propName, property);
-    tag.setState({children});
+    return Array.from(children.values);
   }
 }

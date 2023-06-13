@@ -2,34 +2,40 @@ import { Component } from 'react';
 import Property from './Property';
 
 class Tag extends Component {
-  title;
+  id;
+  title = 'new tag';
   property;
+  parent = null;
+  state = {};
 
   constructor(props) {
     super(props);
     this.state = {
       children: new Map(),
-      property: null,
     };
   }
 
   static of(title, property) {
     const tag = new Tag();
-    tag.init(title, property);
+    tag.title = title;
+    tag.property = property;
+    tag.parent = property.parent;
     return tag;
   }
 
-  init(title, property){
+  rename(title){
     this.title = title;
-    this.property = property;
-    this.setState((state) => {
-      return {property: property};
-    });
+    this.forceUpdate();
+  }
+
+  addProperty(propName, property){
+    const children = this.state.children;
+    children.set(propName, property);
+    this.state = {children: children};
   }
 
   toString() {
-    const propertyTitle = this.property ? this.property.toString() : 'no';
-    return propertyTitle + this.title;
+    return this.title;
   }
 
   render() {

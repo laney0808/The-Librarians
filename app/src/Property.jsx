@@ -1,12 +1,15 @@
 import { Component } from "react";
 
 class Property extends Component {
-    title = '';
+    id = '';
+    title = 'new Property';
+    parent = null;
+    state = {};
+
   constructor(props) {
     super(props);
     this.state = {
       tags: new Map(),
-      parent: null,
     };
   }
 
@@ -16,11 +19,10 @@ class Property extends Component {
     return property;
   }//is there any situation where i would need this?
 
-  static addProp(title, parent) {
-    const property = new Property();
-    property.setState({ parent });
-    property.title = title;
-    return property;
+  addTag(tagName, tag){
+    const tags = this.state.tags;
+    tags.set(tagName, tag);
+    this.setState({tags: tags});
   }
 
   toString(){

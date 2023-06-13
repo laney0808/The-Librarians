@@ -4,12 +4,14 @@ import { Component } from 'react';
 import { Text, View } from 'react-native';
 
 class Content extends Component {
+    id = '';
     title = '';
     user_id = '';
   constructor(props) {
     super(props);
     this.state = {
       tags: new Map(),
+      publishedDate: new Date()
     };
   }
 
