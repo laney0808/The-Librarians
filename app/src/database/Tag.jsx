@@ -2,6 +2,7 @@ import { Component } from 'react';
 
 class Tag extends Component {
   id;
+  user_id;
   title = 'new tag';
   property;
   parent = null;
@@ -14,11 +15,12 @@ class Tag extends Component {
     };
   }
 
-  static of(title, property) {
+  static of(title, property, user) {
     const tag = new Tag();
     tag.title = title.toLowerCase();
     tag.property = property;
     tag.parent = property.parent;
+    tag.user_id = user;
     tag.forceUpdate();
     return tag;
   }

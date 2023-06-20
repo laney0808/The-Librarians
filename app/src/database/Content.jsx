@@ -15,10 +15,11 @@ class Content extends Component {
     };
   }
 
-  static of(title, link) {
+  static of(title, link, user) {
     const content = new Content();
     content.title = title.toLowerCase();
     content.link = link;
+    content.user_id = user;
     return content;
   }
 

@@ -4,7 +4,7 @@ import { Text, TextInput, Button, ActivityIndicator } from "react-native-paper";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../contexts/auth";
 import { useRouter} from "expo-router";
-import Property from "./Property";
+import Property from "../src/database/Property";
 //import * as ImagePicker from 'expo-image-picker';
 
 
@@ -12,7 +12,6 @@ export default function NewProperty() {
     const [title, setTitle] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [loading, setLoading] = useState(false);
-    const [json, setJson] = useState(null);
     const { user } = useAuth();
     const router = useRouter();
 
