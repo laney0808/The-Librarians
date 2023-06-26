@@ -48,4 +48,9 @@ export default class Manager {
     const children = tag.state.children;
     return Array.from(children.values());
   }
+
+  static fetchContentTags(content){
+    const tags = content.state.tags;
+    return Array.from(tags.values());
+  }
 }

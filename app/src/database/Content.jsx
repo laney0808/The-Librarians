@@ -7,6 +7,7 @@ class Content extends Component {
     title = '';
     link = '';
     state = {};
+
   constructor(props) {
     super(props);
     this.state = {
@@ -39,8 +40,13 @@ class Content extends Component {
     return tags.has(key);
   }
 
+  fetchContentTag(){
+    const tags = this.state.tags;
+    return Array.from(tags.values());
+  }
+
   toString(){
-    return this.title;
+    return this.title + ' renewed';
   }
 
   render() {

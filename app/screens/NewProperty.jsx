@@ -5,6 +5,7 @@ import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../contexts/auth";
 import { useRouter} from "expo-router";
 import Property from "../src/database/Property";
+import Manager from "../src/database/Manager";
 //import * as ImagePicker from 'expo-image-picker';
 
 
@@ -13,7 +14,6 @@ export default function NewProperty() {
     const [errMsg, setErrMsg] = useState('');
     const [loading, setLoading] = useState(false);
     const { user } = useAuth();
-    const router = useRouter();
 
     const handleSubmit = async () => {
         setErrMsg('');
@@ -21,10 +21,23 @@ export default function NewProperty() {
             setErrMsg('title cannot be empty')
             return;
         }
+        setLoading(true);
         try{
-            const newProperty = Property(title);
+            const newProperty = Manager.addBaseProp(title, user.id);
+            const json = JSON.stringify(newProperty, null, null);
+            const {error} = await supabase.from('properties').insert({ title: title, user_id: user.id, json: json}).select().single();
+            //insert new property in the data base 
+            if (error) {
+                setErrMsg(error.message);
+                console.log(error);
+                setLoading(false);
+                return;
+            }
         }catch(error){
-            console.log("unnable to create new property")
+            setErrMsg(error.message);
+            console.log(error);
+            setLoading(false);
+            return;
         }
         
 
@@ -32,21 +45,11 @@ export default function NewProperty() {
         //     title: title
         // });
 
-        //setJson(JSON.stringify(newProperty));
-        setLoading(true);
-
-        try { 
-            await supabase.from('properties').insert({ title: title, user_id: user.id}).select().single();
-        //insert new property in the data base 
-        } catch (error) {
-            setLoading(false);
-            console.log(error);
-            setErrMsg(error.message);
-            return;
-        }
+       
 
         setLoading(false);
-        router.push('/NewContent'); //send back to new content
+        setTitle('');
+        setErrMsg('submitted successfully');
     }
 
     return <View style={{ flex: 1, justifyContent: 'center' }}>

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Linking } from 'react-native';
 import { useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import EditPage from '../screens/EditPage';
 
 export default function HomeScreen() {
     const [contents, setContents] = useState([]);
@@ -40,7 +41,7 @@ export default function HomeScreen() {
       setSelectedItem(null);
     }
 
-    const renderEditModal = () => {
+    const renderEditPage = () => {
       if(!modalVisible||!selectedItem){
         return null;
       }
@@ -51,23 +52,30 @@ export default function HomeScreen() {
         transparent={true} 
         onRequestClose={closeEditModal}>
           <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'gray' }}>
-            <View style={{backgroundColor:'white', padding:20, borderRadius:10, width:"80%"}}>
-            <Text>Edit Page</Text>
-            <Button title='close' onPress={closeEditModal}></Button>
+            <View style={{backgroundColor:'white', padding:20, borderRadius:10, width:"80%", alignItems:'center'}}>
+              <Text style={{alignSelf:'flex-start'}}>edit page</Text>
+              <View style={{height:200}}>
+                <EditPage item = {selectedItem}/>
+              </View>
+              <Button title='close' onPress={closeEditModal}></Button>
             </View>
           </View>
         </Modal>
       )
     }
 
-    // const renderContent = ({item}) => {
-    //   return (
-    //     <View>
-    //       <Text>{item.title}</Text>
-    //       {/* <Button title='edit' onPress={() => openEditModal(item)}/> */}
-    //     </View>
-    //   )
-    // }
+    async function deleteContent(id) {
+      const { error } = await supabase
+      .from('contents')
+      .delete()
+      .eq('id', id);
+      if(error){
+        console.log(error)
+        return;
+      }
+      console.log('successfully removed id ' + id);
+      fetchContents();
+    }
 
     function ContentItem({ item }) {
       //TO DO: handle item press
@@ -83,7 +91,7 @@ export default function HomeScreen() {
             <Text>{item.title}</Text>
           </Pressable>
           <Button title='edit' onPress={() => openEditModal(item)}/>
-          <Button title='close' onPress={() => closeEditModal(item)}/>
+          <Button title='bin' onPress={() => deleteContent(item.id)} color={'red'}/>
         </View>
       )
   }
@@ -92,25 +100,11 @@ export default function HomeScreen() {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <FlatList
                 data={contents}
-                // renderItem={({ item }) => <ContentItem content={item} />}
                 renderItem = {({item}) => <ContentItem item={item}/>}
                 onRefresh={() => setRefreshing(true)}
                 refreshing={refreshing}
             />
-            {renderEditModal()}
+            {renderEditPage()}
         </View>
     );
 }
-
-
-
-// const FeedScreen = () => {
-//   return (
-//     <View>
-//       <Text>Feed Screen</Text>
-//       {/* Render your list of items */}
-//     </View>
-//   );
-// };
-
-// export default FeedScreen;

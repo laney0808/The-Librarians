@@ -21,7 +21,6 @@ class Tag extends Component {
     tag.property = property;
     tag.parent = property.parent;
     tag.user_id = user;
-    tag.forceUpdate();
     return tag;
   }
 
