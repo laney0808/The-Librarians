@@ -4,14 +4,10 @@ class Property extends Component {
     id = '';
     user_id;
     title = 'new Property';
-    parent = null;
-    state = {};
+    parent = null; //id
 
   constructor(props) {
     super(props);
-    this.state = {
-      tags: new Map(),
-    };
   }
 
   static of(title, parent, user) {
@@ -23,9 +19,6 @@ class Property extends Component {
   }//is there any situation where i would need this?
 
   addTag(tagName, tag){
-    const tags = this.state.tags;
-    tags.set(tagName.toLowerCase(), tag);
-    this.setState = {tags: tags};
   }
 
   toString(){

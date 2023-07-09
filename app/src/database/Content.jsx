@@ -1,19 +1,17 @@
 import { Component } from 'react';
 import { Text, View } from 'react-native';
+import { supabase } from '../../../lib/supabase';
 
 class Content extends Component {
     id = '';
     user_id = '';
     title = '';
     link = '';
-    state = {};
+    tags = [];
+    publishedDate = 0;
 
   constructor(props) {
     super(props);
-    this.state = {
-      tags: new Map(),
-      publishedDate: new Date()
-    };
   }
 
   static of(title, link, user) {
@@ -23,7 +21,7 @@ class Content extends Component {
     content.user_id = user;
     return content;
   }
-
+  
   rename(title){
     this.title = title.toLowerCase();
   }
@@ -31,26 +29,20 @@ class Content extends Component {
   //ERROR: does not work using setState()
   editTag(tags) {//in map
     //for this map, key is the fullName of the tag
-    this.state = {tags};
-    this.forceUpdate();
+    this.tags = tags;
   }
 
   hasTag(key) {//fullName
-    const tags = this.state.tags;
-    return tags.has(key);
-  }
-
-  fetchContentTag(){
-    const tags = this.state.tags;
-    return Array.from(tags.values());
+    const tags = this.tags;
+    return tags.includes(key);
   }
 
   toString(){
-    return this.title + ' renewed';
+    return this.title;
   }
 
   render() {
-    const { title } = this.state;
+    const { title } = this.title;
     return (
       <View>
         <Text>Title: {title}</Text>
