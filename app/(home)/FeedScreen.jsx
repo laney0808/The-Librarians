@@ -41,19 +41,36 @@ export default function HomeScreen() {
       setSelectedItem(null);
     }
 
-    const handleSave = async (newTitle) => {
+    const handleSave = async (newTitle, newLink, newTags) => {
       console.log("saving!")
       
-      const { data, error } = await supabase
+      const { error1 } = await supabase
       .from('contents')
       .update({ title: newTitle })
       .eq('id', selectedItem.id)
       .select()
 
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('change title to '+data);
+      const { error2 } = await supabase
+      .from('contents')
+      .update({ link: newLink })
+      .eq('id', selectedItem.id)
+      .select()
+
+      //TODO: json stringyfy new tags
+
+      const tags = JSON.stringify(newTags);
+
+      const { error3 } = await supabase
+      .from('contents')
+      .update({ tags: tags })
+      .eq('id', selectedItem.id)
+      .select()
+
+      if (error1) {
+        console.log(error1);
+      }
+      if (error2) {
+        console.log(error2);
       }
       setModalVisible(false);
       setSelectedItem(null);
@@ -71,15 +88,8 @@ export default function HomeScreen() {
         transparent={true} 
         onRequestClose={closeEditModal}>
           <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'gray' }}>
-            <View style={{backgroundColor:'white', padding:20, borderRadius:10, width:"80%", alignItems:'center'}}>
-              <Text style={{alignSelf:'flex-start'}}>edit page</Text>
-              <View style={{height:200}}>
                 <EditPage item = {selectedItem} onSave={handleSave} onCancel={closeEditModal}/>
-              </View>
-              {/* <Button title='save' onPress={handleSave}></Button>
-              <Button title='cancel' onPress={closeEditModal}></Button> */}
             </View>
-          </View>
         </Modal>
       )
     }
