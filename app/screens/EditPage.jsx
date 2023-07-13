@@ -4,28 +4,28 @@ import { Text, TextInput, Button, ActivityIndicator, Modal, List} from "react-na
 import { useAuth } from "../../contexts/auth";
 import { supabase } from "../../lib/supabase";
 
-export default function EditPage({item}) {
-    const [activeProperty, setActiveProperty] = useState(null);
-    const [selectedTag, setSelectedTag] = useState(null);
-    const [expanded, setExpanded] = useState(false);
+export default function EditPage({item, onSave, onCancel}) {
+    const [title, setTitle] = useState(item.title);
     const [tags, setTags] = useState(['tag1', 'tag2', 'tag3']);
-    const title = item.title;
 
-    const parsedItem = JSON.parse(item.json);
-
-    const test = () => {
-        console.log('test');
+    const handleSave = () => {
+        console.log(title);
+        onSave(title);
     }
-    const user = useAuth();
 
-    const handleExpand = () => {
-        setExpanded(!expanded);
+    const handleCancel = () => {
+        onCancel();
     }
 
     return (
-        <View>
-            <Text style={{fontSize:20}}>{title}</Text>
-            <Button title={'test'} onPress={test}>test</Button>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+        <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+          <TextInput value={title} onChangeText={setTitle} style={{ borderWidth: 1, borderColor: 'gray', marginBottom: 10 }} />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Button title="Save" onPress={handleSave}>save</Button>
+            <Button title="Cancel" onPress={handleCancel}>cancel</Button>
+          </View>
         </View>
+      </View>
     )
 }
