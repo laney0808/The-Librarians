@@ -8,7 +8,16 @@ import TagList from "../src/components/TagList";
 export default function EditPage({item, onSave, onCancel}) {
     const [title, setTitle] = useState(item.title);
     const [link, setLink] = useState(item.link);
-    const [tags, setTags] = useState(['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']);
+    const itemTags = JSON.parse(item.tags);
+    console.log(itemTags);
+    const [tags, setTags] = useState(itemTags);
+    
+    const handleDelTag = (deleteTag) => {
+      const newTags = tags.filter((tag)=> tag!==deleteTag);
+      setTags(newTags);
+      console.log("deleted!")
+      return;
+    }
 
     const handleSave = () => {
         onSave(title, link, tags);
@@ -19,11 +28,11 @@ export default function EditPage({item, onSave, onCancel}) {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)', width: 500}}>
         <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-          <TextInput value={title} onChangeText={setTitle} style={{ borderWidth: 1, borderColor: 'purple', marginBottom: 10 }} />
+          <TextInput value={title} onChangeText={setTitle} style={{ borderWidth: 1, borderColor: 'purple', marginBottom: 10, width: 300}} />
           <TextInput value={link} onChangeText={setLink} style={{ borderWidth: 1, borderColor: 'gray', marginBottom: 10 }} />
-          <TagList items={tags}/>
+          <TagList items={tags} handleDelete={handleDelTag}/>
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Button title="Save" onPress={handleSave}>save</Button>

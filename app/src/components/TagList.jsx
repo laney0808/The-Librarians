@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-const TagList = ({ items }) => {
+const TagList = ({ items, handleDelete }) => {
   return (
     <View style={styles.container}>
       {items.map((item, index) => (
         <View style={styles.itemContainer} key={index}>
-          <View style={styles.itemBox}>
+          <Pressable style={styles.itemBox} onLongPress={() => handleDelete(item)}>
             <Text style={styles.itemText}>{item}</Text>
-          </View>
+          </Pressable>
         </View>
       ))}
     </View>
