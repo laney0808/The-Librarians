@@ -19,12 +19,14 @@ export default function Register() {
             return;
         }
         setLoading(true);
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { error1 } = await supabase.auth.signUp({ email, password });
+
+        
         setLoading(false);
-        if (error) {
-            setErrMsg(error.message);
+        if (error1) {
+            setErrMsg(error1.message);
             return;
-        }
+        } 
     }
 
     return (
