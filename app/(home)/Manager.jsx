@@ -128,14 +128,14 @@ const FileManager = () => {
   };
 
   const handleAddClick = async () => {
-    // Implement your logic for adding a new file
     console.log('Add button clicked');
     setRefreshing(true);
+    //Consider different current type
     if (currentType == 'tag'){
       const { error } = await supabase
       .from('properties')
       .insert([
-        { title: 'new prop', user_id: user.id, parent: currentDirectory.parent},
+        { title: 'new prop', user_id: user.id, parent: currentDirectory.id},
       ])
       .select()
    } else {
@@ -143,14 +143,14 @@ const FileManager = () => {
         const { error } = await supabase
         .from('Tags')
         .insert([
-          { title: 'new tag', user_id: user.id, parent: currentDirectory.parent},
+          { title: 'new tag', user_id: user.id, parent: currentDirectory.id},
         ])
         .select()
       } else {
         const { error } = await supabase
         .from('Tags')
         .insert([
-          { title: 'new tag', user_id: user.id},
+          { title: 'new tag', user_id: user.id, parent: 0},
         ])
         .select()
       }
