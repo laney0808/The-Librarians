@@ -24,34 +24,60 @@ const FileManager = () => {
 
   useEffect(() => {
     // Fetch the initial file list (root directory)
-    fetchFiles(null);//id
+    fetchFiles(0);//id
+    setCurrentType('property');
   }, []);
 
   useEffect(() => {
     if (refreshing) {
-        fetchFiles(currentDirectory);
+        fetchFiles(currentDirectory? currentDirectory.id : 0);
         setRefreshing(false);
     }
 }, [refreshing]);
 //todo: fetchfile is not fetching root level tags
+
   const fetchFiles = async (parentDir) => { //id
     // API call to fetch files for the given parent ID
     setRefreshing(true);
+    let filteredItems;
+    let error;
     if (currentType == 'property'){
-        let { data: filteredItems, error1 } = await supabase
-        .from('Tags')
-        .select("*")
-        .eq('parent', null);
-        setRefreshing(false);
-        setFileList(filteredItems);
+        if (parentDir == null) {
+          //Fetch root level files where parent is 0 (root)
+          let { data, error} = await supabase
+          .from('Tags')
+          .select("*")
+          .eq('parent', 0);
+          if (error) {
+            console.log(error.message);
+          } else {
+            filteredItems = data;
+          }
+        } else {
+          let {data, error} = await supabase
+          .from('Tags')
+          .select('*')
+          .eq('parent', parentDir);
+          if (error) {
+            console.log(error.message);
+          } else {
+            filteredItems = data;
+          }
+        }
+        
     } else {
-        let { data: filteredItems, error2 } = await supabase
+        let { data, error } = await supabase
         .from('properties')
         .select("*")
         .eq('parent', parentDir);
-        setRefreshing(false);
-        setFileList(filteredItems);
+        if (error) {
+          console.log(error.message);
+        } else {
+          filteredItems = data;
+        }
     }
+    setRefreshing(false);
+    setFileList(filteredItems || []);
   };
 
   const handleDirectoryClick = (file) => {
@@ -65,19 +91,24 @@ const FileManager = () => {
     setRefreshing(true);
     if (currentDirectory) {
       if (currentType == 'property'){
-        let {data: parentTag, error} = await supabase
-        .from('Tags')
-        .select("*")
-        .eq('id', currentDirectory.parent);
-        setRefreshing(false);
-        if (error) {
-          console.log(error.message);
+        if (currentDirectory.parent == null) {
+          setCurrentDirectory(null);
         } else {
-          setCurrentType('tag');
-          setCurrentDirectory(parentTag);
+          let {data: parentTag, error} = await supabase
+          .from('Tags')
+          .select("*")
+          .eq('id', currentDirectory.parent);
+          setRefreshing(false);
+          if (error) {
+            console.log(error.message);
+          } else {
+            setCurrentType('tag');
+            setCurrentDirectory(parentTag);
+          }
         }
       } else {
-        if(currentDirectory.parent){
+        setCurrentType('property')
+        if(currentDirectory.parent != 0){
           let {data: parentProp, error} = await supabase
           .from('properties')
           .select("*")
@@ -86,12 +117,13 @@ const FileManager = () => {
           if (error) {
             console.log(error.message);
           } else {
-            setCurrentType('properties');
             setCurrentDirectory(parentProp);
           }
+        } else {
+          setCurrentDirectory(null);
         }
       }
-      fetchFiles(currentDirectory);
+      fetchFiles(currentDirectory.id);
     }
   };
 
@@ -103,7 +135,7 @@ const FileManager = () => {
       const { error } = await supabase
       .from('properties')
       .insert([
-        { title: 'new tag', user_id: user.id, parent: currentDirectory.parent},
+        { title: 'new prop', user_id: user.id, parent: currentDirectory.parent},
       ])
       .select()
    } else {
@@ -130,9 +162,16 @@ const FileManager = () => {
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.fileItem} onPress={() => handleDirectoryClick(item)}>
       <FontAwesome name="file" size={24} color="black" style={styles.fileIcon} />
-      <Text>{item.name}</Text>
+      <Text>{item.title}</Text>
     </TouchableOpacity>
   );
+
+  //TODO: testing
+  const buttonPress = () => {
+    console.log("current type: " + currentType);
+    console.log("current directory: " + currentDirectory);
+    console.log("current directory id: " + 0);
+  }
 
   return (
     <View style={styles.container}>
@@ -142,7 +181,7 @@ const FileManager = () => {
             <FontAwesome name="arrow-left" size={18} color="black" />
           </TouchableOpacity>
         )}
-        <Text>{currentDirectory ? currentDirectory.name : 'Root'}</Text>
+        <Text>{currentDirectory ? currentDirectory.title : 'Root'}</Text>
       </View>
       <FlatList
         data={fileList}
@@ -152,6 +191,7 @@ const FileManager = () => {
         onRefresh={() => setRefreshing(true)}
         refreshing={refreshing} 
       />
+      <Button title="test" onPress={buttonPress}>test</Button>
       <TouchableOpacity style={styles.addButton} onPress={handleAddClick}>
         <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>
