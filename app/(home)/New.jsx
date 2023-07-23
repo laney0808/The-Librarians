@@ -47,9 +47,5 @@ export default function NewContent() {
         {errMsg !== '' && <Text>{errMsg}</Text>}
         <Button onPress={handleSubmit}>Submit</Button>
         {loading && <ActivityIndicator />}
-        <Button onPress={() => router.push('/src/NewProperty')}>
-          Create New Property
-        </Button>
-       
     </View>;
 }

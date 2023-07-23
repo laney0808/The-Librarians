@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // You can use any icon library you prefer
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
+import EditTag from '../screens/EditTag';
 
-// Sample file data
-const files = [
-  { id: 1, name: 'File 1', parent: null },
-  { id: 2, name: 'File 2', parent: null },
-  { id: 3, name: 'File 3', parent: null },
-  { id: 4, name: 'File 4', parent: 1 },
-  { id: 5, name: 'File 5', parent: 1 },
-  { id: 6, name: 'File 6', parent: 2 },
-];
-
-const FileManager = () => {
+const TagManager = () => {
   const [currentDirectory, setCurrentDirectory] = useState(null);//item
   const [currentType, setCurrentType] = useState('property');//property/tag
   const [fileList, setFileList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);//pull to refresh
   const {user} = useAuth();
+  const [modalVisible, setModalVisible] = useState(false);
+  //note: we are not allowing edition of tag/prop title after initialization for now
 
 
   useEffect(() => {
@@ -129,13 +122,18 @@ const FileManager = () => {
 
   const handleAddClick = async () => {
     console.log('Add button clicked');
+    openEditModal();
+  }
+
+  const handleSave = async (newTitle) => {
+    console.log('saving!');
     setRefreshing(true);
     //Consider different current type
     if (currentType == 'tag'){
       const { error } = await supabase
       .from('properties')
       .insert([
-        { title: 'new prop', user_id: user.id, parent: currentDirectory.id},
+        { title: newTitle, user_id: user.id, parent: currentDirectory.id},
       ])
       .select()
    } else {
@@ -143,21 +141,30 @@ const FileManager = () => {
         const { error } = await supabase
         .from('Tags')
         .insert([
-          { title: 'new tag', user_id: user.id, parent: currentDirectory.id},
+          { title: newTitle, user_id: user.id, parent: currentDirectory.id},
         ])
         .select()
       } else {
         const { error } = await supabase
         .from('Tags')
         .insert([
-          { title: 'new tag', user_id: user.id, parent: 0},
+          { title: newTitle, user_id: user.id, parent: 0},
         ])
         .select()
       }
-      
    }
    setRefreshing(false);
+   setModalVisible(false);
   };
+//TODO
+  const openEditModal = () => {
+    setModalVisible(true);
+    console.log('set modal visible')
+  }
+
+  const closeEditModal = () => {
+    setModalVisible(false);
+  }
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.fileItem} onPress={() => handleDirectoryClick(item)}>
@@ -165,8 +172,25 @@ const FileManager = () => {
       <Text>{item.title}</Text>
     </TouchableOpacity>
   );
+//TODO: render edit pages for tag and prop respectively
+  const renderEditTag = () => {
+    if(!modalVisible){
+      return null;
+    }
+    return (
+      <Modal 
+      visible = {modalVisible} 
+      animationType='slide' 
+      transparent={true} 
+      onRequestClose={closeEditModal}>
+        <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'gray' }}>
+              <EditTag onSave={handleSave} onCancel={closeEditModal}/>
+          </View>
+      </Modal>
+    )
+  }
 
-  //TODO: testing
+  //TODO: delete testing
   const buttonPress = () => {
     console.log("current type: " + currentType);
     console.log("current directory: " + currentDirectory);
@@ -195,6 +219,7 @@ const FileManager = () => {
       <TouchableOpacity style={styles.addButton} onPress={handleAddClick}>
         <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>
+      {renderEditTag()}
     </View>
   );
 };
@@ -237,5 +262,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FileManager;
+export default TagManager;
 
