@@ -26,7 +26,7 @@ export default function NewContent() {
             return;
         }
         setLoading(true);
-        const { error } = await supabase.from('contents').insert({ title: title, user_id: user.id, link: link ``}).select().single();
+        const { error } = await supabase.from('contents').insert({ title: title, user_id: user.id, link: link}).select().single();
         //insert new todo in the data base 
 
         if (error != null) { 

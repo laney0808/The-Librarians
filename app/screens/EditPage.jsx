@@ -29,7 +29,7 @@ export default function EditPage({item, onSave, onCancel}) {
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)', width: 500}}>
-        <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+        <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: 400 }}>
           <TextInput value={title} onChangeText={setTitle} style={{ borderWidth: 1, borderColor: 'purple', marginBottom: 10, width: 300}} />
           <TextInput value={link} onChangeText={setLink} style={{ borderWidth: 1, borderColor: 'gray', marginBottom: 10 }} />
           <TagList items={tags} handleDelete={handleDelTag}/>

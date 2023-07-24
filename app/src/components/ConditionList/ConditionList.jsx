@@ -4,7 +4,7 @@ import { /*Checkbox,*/ Text} from 'react-native-paper';
 import conditionListST from './ConditionListST';
 import Condition from '../Condition/Condition';
 
-const ConditionList= () => {
+const ConditionList= ({onSearch}) => {
     const [conditions, setConditions] = useState([new Condition()]);
     const [operator, setOperator] =useState('and');
 
@@ -30,6 +30,10 @@ const ConditionList= () => {
         console.log('operator changed to and');
       }
   
+    }
+
+    const handleSearch = () => {
+      onSearch(conditions, operator);
     }
 
     const renderCondition =({item})  => (
@@ -60,6 +64,7 @@ const ConditionList= () => {
             renderItem={renderCondition}
             style={{}}
           />
+          <Button title='search' onPress={handleSearch}>search</Button>
       </View>
     );
 };
