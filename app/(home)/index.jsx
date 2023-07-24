@@ -19,13 +19,18 @@ const SearchScreen = () => {
     setRefreshing(true);
     let { data } = await supabase.from('contents').select('*');
     setContents(data);
-    // if (operator == 'or') {
+    if (operator == 'or') {
     //   //use a string builder + reduce() on array to build a condition for each field in such format:
-    //   //title: 'title.contains.condition1'
-    //   //tag: 'tags.contains.tag1'
+    //   //title: 'title.contains.[condition1]'
+    //   //tag: 'tags.contains.[tag1]'
     //   //date: ?
 
-    // let string;
+    let orCondition = conditions.map(condition => condition.toString()).join();
+    console.log(orCondition)
+    }
+
+
+    
 
     // const { data, error } = await supabase
     // .from('contens')
@@ -85,7 +90,7 @@ const SearchScreen = () => {
       transparent={true} 
       onRequestClose={closeEditModal}>
         <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'gray' }}>
-              <SearchResult onSearch={handleSearch} onClose={closeEditModal}/>
+              <SearchResult filteredItems={content} onClose={closeEditModal}/>
           </View>
       </Modal>
     )

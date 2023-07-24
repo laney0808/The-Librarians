@@ -154,6 +154,27 @@ class Condition extends Component {
     }
   }
 
+  //TODO string builder for supabase filtering
+
+  toString = () => {
+    let condition = '';
+    if (this.state.type == Condition.Type.Title){
+      condition = 'title.contains.' + '[' + this.state.textInput + 'test' + ']';
+    } else if (this.state.type == Condition.Type.Tags){
+      condition = 'tags.contains.' + '[' + this.tagsInput + ']';
+    } else if (this.state.type == Condition.Type.Date){
+      if (this.state.modifier2 == Condition.Modifier2.From){
+        condition = 'date.gte.' + this.state.dateInput;
+      } else if (this.state.modifier2 == Condition.modifier2.Until){
+        condition = 'date.lte.' + this.state.dateInput;
+      } else {
+        console.log('date-within to be developed');
+        condition = 'title.contains.' + '[]';
+      }
+    }
+    return condition;
+  }
+
   printError(){
       return (
         <Text>this.state.errMsg</Text>
@@ -205,7 +226,8 @@ class Condition extends Component {
               selectedValue={this.state.modifier1}
               onValueChange={this.setModifier}>
               <Picker.Item label="Contains" value="contains" />
-              <Picker.Item label="Does not contain" value="notContain" />
+              <Picker.Item label="Option closed" value="notContain" />
+              {/* TODO: "does not contain" needs reconstruction*/}
             </Picker>
         ) : (
             <Picker

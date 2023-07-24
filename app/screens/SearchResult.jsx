@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase';
 
 export default function SearchResult({filteredItems, onClose}) {
     const [refreshing, setRefreshing] = useState(false);
+    console.log('Filtered Items:', filteredItems)
 
     function ContentItem({ item }) {
         //TO DO: handle item press - implement open link
