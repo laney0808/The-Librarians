@@ -4,7 +4,7 @@ import { /*Checkbox,*/ Text} from 'react-native-paper';
 import conditionListST from './ConditionListST';
 import Condition from '../Condition/Condition';
 
-const ConditionList= ({onSearch}) => {
+const ConditionList= (prop) => {
     const [conditions, setConditions] = useState([new Condition()]);
     const [operator, setOperator] =useState('and');
 
@@ -33,7 +33,7 @@ const ConditionList= ({onSearch}) => {
     }
 
     const handleSearch = () => {
-      onSearch(conditions, operator);
+      prop.onSearch(conditions, operator);
     }
 
     const renderCondition =({item})  => (

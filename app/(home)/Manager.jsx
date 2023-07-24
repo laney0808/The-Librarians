@@ -190,13 +190,6 @@ const TagManager = () => {
     )
   }
 
-  //TODO: delete testing
-  const buttonPress = () => {
-    console.log("current type: " + currentType);
-    console.log("current directory: " + currentDirectory);
-    console.log("current directory id: " + 0);
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.breadcrumb}>
@@ -215,7 +208,6 @@ const TagManager = () => {
         onRefresh={() => setRefreshing(true)}
         refreshing={refreshing} 
       />
-      <Button title="test" onPress={buttonPress}>test</Button>
       <TouchableOpacity style={styles.addButton} onPress={handleAddClick}>
         <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>

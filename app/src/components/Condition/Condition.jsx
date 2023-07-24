@@ -101,7 +101,7 @@ class Condition extends Component {
     }
   }
 
-  setInput(value) {
+  setInput = (value) => {
     switch (this.state.type) {
       case Condition.Type.Title:
         if (typeof value === "string") {
